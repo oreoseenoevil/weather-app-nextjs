@@ -18,13 +18,20 @@ interface MainProps {
 export const Main = ({ user, isLoading }: MainProps) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [screen, setScreen] = useState('home');
-  const { setLocation, location, handleSearch, weatherData, loading } = useWeatherForecast();
+  const { setLocation, location, handleSearch, weatherData, loading, setWeatherData, error, setError } =
+    useWeatherForecast();
 
   const handleScreen = () => {
     if (location) {
       handleSearch();
       setScreen('weather');
     }
+  };
+
+  const handleBack = () => {
+    setScreen('home');
+    setWeatherData(null);
+    setError(null);
   };
 
   useEffect(() => {
@@ -46,24 +53,22 @@ export const Main = ({ user, isLoading }: MainProps) => {
       case 'weather':
         return (
           <div className={styles.group}>
-            <h2>{weatherData?.name} Weather</h2>
-            <table>
-              <thead>
-                <tr>
-                  <th>Date (mm/dd/yyyy)</th>
-                  <th>Temp(F)</th>
-                  <th className={styles.tablemobile}>Description</th>
-                  <th className={styles.tablemobile}>Main</th>
-                  <th className={styles.tablemobile}>Pressure</th>
-                  <th className={styles.tablemobile}>Humidity</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  {loading ? (
-                    <td colSpan={6}>Loading...</td>
-                  ) : (
-                    <>
+            {!loading && !!weatherData && !error && (
+              <>
+                <h2>{weatherData?.name} Weather</h2>
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Date (mm/dd/yyyy)</th>
+                      <th>Temp(F)</th>
+                      <th className={styles.tablemobile}>Description</th>
+                      <th className={styles.tablemobile}>Main</th>
+                      <th className={styles.tablemobile}>Pressure</th>
+                      <th className={styles.tablemobile}>Humidity</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
                       <td>{moment().format('L')}</td>
                       <td>{weatherData?.main?.temp}</td>
                       <td className={styles.tablemobile}>
@@ -72,13 +77,15 @@ export const Main = ({ user, isLoading }: MainProps) => {
                       <td className={styles.tablemobile}>{formatCapitalizeWord(weatherData?.weather[0]?.main)}</td>
                       <td className={styles.tablemobile}>{weatherData?.main?.pressure}</td>
                       <td className={styles.tablemobile}>{weatherData?.main?.humidity}</td>
-                    </>
-                  )}
-                </tr>
-              </tbody>
-            </table>
+                    </tr>
+                  </tbody>
+                </table>
+              </>
+            )}
+            {!isLoading && error && <h1>{error}</h1>}
+            {loading && <h1>Loading...</h1>}
             <span className={styles.weather_button}>
-              <button onClick={() => setScreen('home')} type="button">
+              <button onClick={handleBack} type="button">
                 Back
               </button>
             </span>

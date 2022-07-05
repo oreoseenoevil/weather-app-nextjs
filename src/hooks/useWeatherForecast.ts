@@ -6,9 +6,10 @@ interface WeatherData {
 }
 
 const useWeatherForecast = () => {
-  const [weatherData, setWeatherData] = useState<WeatherData>({});
+  const [weatherData, setWeatherData] = useState<WeatherData | null>(null);
   const [location, setLocation] = useState('');
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   const handleSearch = () => {
     setLoading(true);
@@ -18,10 +19,15 @@ const useWeatherForecast = () => {
         setWeatherData(data.data);
         setLocation('');
         setLoading(false);
+      })
+      .catch((err) => {
+        setError(err.message);
+        setLoading(false);
+        setLocation('');
       });
   };
 
-  return { weatherData, location, setLocation, handleSearch, loading };
+  return { weatherData, location, setLocation, handleSearch, loading, error, setWeatherData, setError };
 };
 
 export default useWeatherForecast;
