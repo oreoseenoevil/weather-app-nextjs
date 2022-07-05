@@ -90,7 +90,9 @@ export const Main = ({ user, isLoading }: MainProps) => {
           <>
             <div className={styles.profile}>
               <span>{user?.name}</span>
-              <a href={`https://github.com/${user?.nickname}`}>https://github.com/{user?.nickname}</a>
+              <a href={`https://github.com/${user?.nickname}`} target="_blank" rel="noopener noreferrer">
+                https://github.com/{user?.nickname}
+              </a>
             </div>
             <div className={styles.group}>
               <input value={location} onChange={(event) => setLocation(event.target.value)} placeholder="Search City" />
