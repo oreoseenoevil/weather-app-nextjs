@@ -1,0 +1,9 @@
+node_modules
+# Ignore artifacts:
+build
+coverage
+.swc
+.next
+public
+styles
+*.json
